@@ -3,10 +3,11 @@
   "version": "0.1.0",
   "type": "module",
   "scripts": {
-    "dev": "concurrently -n fe,be -c cyan,yellow \"vite\" \"tsx watch server/index.ts\"",
+    "dev": "bun run build && bun run start",
     "build": "vite build && tsc -p tsconfig.server.json --noEmit",
     "start": "NODE_ENV=production tsx server/index.ts",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "dev:local": "concurrently -n fe,be -c cyan,yellow \"vite\" \"tsx watch server/index.ts\""
   },
   "dependencies": {
     "better-sqlite3": "^9.6.0",
