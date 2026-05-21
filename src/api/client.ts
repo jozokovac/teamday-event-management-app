@@ -6,8 +6,16 @@ async function apiFetch<T>(path: string, options?: RequestInit): Promise<T> {
     ...options,
   });
   if (res.status === 204) return undefined as T;
-  const data = await res.json();
-  if (!res.ok) throw new Error(data.error ?? 'An unexpected error occurred');
+  const contentType = res.headers.get('content-type') ?? '';
+  const data = contentType.includes('application/json') ? await res.json() : await res.text();
+  if (!res.ok) {
+    const message = typeof data === 'object' && data && 'error' in data
+      ? String(data.error)
+      : typeof data === 'string' && data.trim()
+        ? data.trim()
+        : `Request failed with status ${res.status}`;
+    throw new Error(message);
+  }
   return data as T;
 }
 
